@@ -52,6 +52,7 @@ class ControllerProducts {
             $.getJSON(server + "/products?" + query,
                 function (data) {
                     self.loadList(data.products)
+                    self.loadButtons(data.total)
                 }
             )
         }
@@ -67,14 +68,39 @@ class ControllerProducts {
                     var product = $(".example-product").clone()
                     product.find(".image").attr("src", products[i].url_image)
                     product.find(".product-title").html(products[i].name)
-                    product.find(".product-price").html(products[i].price)
-                    product.find(".product-discount").html(products[i].discount)
+                    product.find(".product-price").html(`Precio: $${products[i].price}`)
+                    var discount = product.find(".product-discount")
+                    if (products[i].discount == 0) {
+                        (discount.hide())
+                    } else {
+                        discount.html(`Descuento: $${products[i].discount}`)
+                    }
                     product.attr("id", products[i].id)
                     product.appendTo($(".container-products"))
                     product.removeClass("example-product")
                     product.show()
                 }
             }
+        }
+
+        this.loadButtons = function (total) {
+            var quantityPerPage = 15
+            var self = this;
+            var quantityOfPages = Math.ceil(total / quantityPerPage)
+
+            $(".btn-group").empty()
+            for (i = 0; i < quantityOfPages; i++) {
+                var button = $(".example-button").clone()
+                button.html(i + 1)
+                button.attr("page-number", i + 1)
+                button.appendTo($(".btn-group"))
+                button.removeClass("example-button")
+                button.show()
+            }
+            $(".page-button").click(function () {
+                self.searchProducts($(this).attr("page-number"))
+                scroll(0, 0)
+            })
         }
     }
 }
