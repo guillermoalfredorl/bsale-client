@@ -16,30 +16,29 @@
                     <img src="img/bsaleLogo.png" alt="bsale logo"></img>
                 </div>
             </div>
-        
             <div class="search-panel">
                 <div class="container">
-                    <div id="filter-panel" class="filter-panel">
+                    <div>
                         <form class="flex justify-center" role="form">
-                            <div class="w-100-ns">
-                                <label class="filter-col" for="pref-search">Producto</label>
+                            <div>
+                                <label>Producto</label>
                                 <input type="text" id="product-search" class="product-search">
                             </div>
-                            <div class="w-100-ns">
-                                <label class="filter-col dropdown" for="pref-search">Categoria</label>
+                            <div>
+                                <label>Categoria</label>
                                 <select class="category-select">
                                     <option value="0">Todos</option>
                                 </select>
                             </div>
-                            <div class="w-100-ns">
-                                <label class="filter-col dropdown" for="pref-orderby">Ordenar por</label>
+                            <div>
+                                <label>Ordenar por</label>
                                 <select class="order-select">
                                     <option value="price-ASC">Precio: menor a mayor</option>
                                     <option value="price-DESC">Precio: mayor a menor</option>
                                 </select>
                             </div>
-                            <div class="w-100-ns">
-                                <button type="button" class="search btn-film btn-round">Buscar</button>
+                            <div>
+                                <button type="button" class="search">Buscar</button>
                             </div>
                         </form>
                     </div>
@@ -47,7 +46,7 @@
             </div>
             <div class="example-product item" style="display: none;">
                 <div class="card" style="width: 18rem;">
-                    <img class="card-img-top image" alt="Product image">
+                    <img class="image" alt="Product image">
                     <div class="card-body">
                         <h4 class="product-title"></h4>
                         <p class="product-price"></p>
@@ -56,10 +55,10 @@
                 </div>
             </div>
             <div class="main-container-grid ">
-                <div class="alert-results alert alert-info center" style="display: none;" role="alert">No se encontraron resultados.</div>
+                <div class="alert-results alert alert-info" style="display: none;" role="alert">No se encontraron resultados.</div>
                 <div class="container-products d-flex flex-wrap justify-content-center"></div>
             </div>
-            <button type="button" style="display: none;" class="example-button page-button btn-film"></button>
+            <button type="button" style="display: none;" class="example-button page-button"></button>
             <div class="btn-group center grid-pager" role="group"></div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
