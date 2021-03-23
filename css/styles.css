@@ -81,7 +81,7 @@ body {
 .main-container-grid {
   padding: 10px 0;
   background-color: rgb(243, 243, 243);
-  min-height: 50vh;
+  min-height: 80vh;
 }
 
 .grid-pager {
