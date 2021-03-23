@@ -1,4 +1,4 @@
-var server = 'http://localhost:5000'
+var server = 'https://bsaletestserver.herokuapp.com'
 
 $(document).ready(function () {
     $.getJSON(server + "/category",
