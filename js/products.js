@@ -12,7 +12,15 @@ $(document).ready(function () {
         }
     )
     var controllerProducts = new ControllerProducts()
-    $('.search').click(function () {
+
+    $("#product-search").keypress("keyup", function (e) {
+        if (e.keyCode === 13) {
+            e.preventDefault()
+            $(".search").click()
+        }
+    })
+
+    $(".search").click(function () {
         $(".alert-results").hide()
         controllerProducts.searchProducts()
     })
@@ -24,7 +32,7 @@ class ControllerProducts {
     constructor() {
         this.searchProducts = function (page, quantity) {
             var self = this;
-            // var product = $(".product-search").val()
+            var name = $(".product-search").val()
             var category = $(".category-select option:selected").attr("value")
             var order = $(".order-select option:selected").attr("value")
 
@@ -34,9 +42,9 @@ class ControllerProducts {
                 page: pageRequested
             }
 
-            /* if (product) {
-                query_params.product = product
-            } */
+            if (name) {
+                query_params.name = name
+            }
 
             if (category != 0) {
                 query_params.category = category
