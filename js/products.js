@@ -1,17 +1,17 @@
-var server = 'https://bsaletestserver.herokuapp.com'
+const server = 'https://bsaletestserver.herokuapp.com'
 
 $(document).ready(function () {
     $.getJSON(server + "/category",
         function (data) {
             for (i = 0; i < data.category.length; i++) {
-                var option = $(".category-select option[value='0']").clone()
+                let option = $(".category-select option[value='0']").clone()
                 option.attr("value", (data.category)[i].id)
                 option.html((data.category)[i].name)
                 $(".category-select").append(option)
             }
         }
     )
-    var controllerProducts = new ControllerProducts()
+    let controllerProducts = new ControllerProducts()
 
     $("#product-search").keypress("keyup", function (e) {
         if (e.keyCode === 13) {
@@ -31,14 +31,14 @@ $(document).ready(function () {
 class ControllerProducts {
     constructor() {
         this.searchProducts = function (page, quantity) {
-            var self = this;
-            var name = $(".product-search").val()
-            var category = $(".category-select option:selected").attr("value")
-            var order = $(".order-select option:selected").attr("value")
+            let self = this;
+            let name = $(".product-search").val()
+            let category = $(".category-select option:selected").attr("value")
+            let order = $(".order-select option:selected").attr("value")
 
-            var pageRequested = (page) ? page : 1
+            let pageRequested = (page) ? page : 1
 
-            var query_params = {
+            let query_params = {
                 page: pageRequested
             }
 
@@ -55,7 +55,7 @@ class ControllerProducts {
 
             query_params.quantity = (quantity) ? quantity : 15
 
-            var query = $.param(query_params)
+            let query = $.param(query_params)
 
             $.getJSON(server + "/products?" + query,
                 function (data) {
@@ -67,17 +67,17 @@ class ControllerProducts {
 
         this.loadList = function (products) {
             $(".container-products").empty();
-            var self = this;
-            var quantity = products.length;
+            let self = this;
+            let quantity = products.length;
             if (quantity == 0) {
                 $(".alert-results").show()
             } else {
                 for (i = 0; i < quantity; i++) {
-                    var product = $(".example-product").clone()
+                    let product = $(".example-product").clone()
                     product.find(".image").attr("src", products[i].url_image)
                     product.find(".product-title").html(products[i].name)
                     product.find(".product-price").html(`Precio: $${products[i].price}`)
-                    var discount = product.find(".product-discount")
+                    let discount = product.find(".product-discount")
                     if (products[i].discount == 0) {
                         (discount.hide())
                     } else {
@@ -92,13 +92,13 @@ class ControllerProducts {
         }
 
         this.loadButtons = function (total) {
-            var quantityPerPage = 15
-            var self = this;
-            var quantityOfPages = Math.ceil(total / quantityPerPage)
+            let quantityPerPage = 15
+            let self = this;
+            let quantityOfPages = Math.ceil(total / quantityPerPage)
 
             $(".btn-group").empty()
             for (i = 0; i < quantityOfPages; i++) {
-                var button = $(".example-button").clone()
+                let button = $(".example-button").clone()
                 button.html(i + 1)
                 button.attr("page-number", i + 1)
                 button.appendTo($(".btn-group"))
