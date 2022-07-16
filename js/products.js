@@ -1,114 +1,109 @@
-const server = 'https://bsaletestserver.herokuapp.com'
+const server = 'http://localhost:5000';
 
-$(document).ready(function () {
-    $.getJSON(server + "/category",
-        function (data) {
-            for (i = 0; i < data.category.length; i++) {
-                let option = $(".category-select option[value='0']").clone()
-                option.attr("value", (data.category)[i].id)
-                option.html((data.category)[i].name)
-                $(".category-select").append(option)
-            }
-        }
-    )
-    let controllerProducts = new ControllerProducts()
+$(document).ready(() => {
+  $.getJSON(server + '/product/category', (data) => {
+    data.category.forEach((e) => {
+      let option = $(".category-select option[value='0']").clone();
+      option.attr('value', e.id);
+      option.html(e.name);
+      $('.category-select').append(option);
+    });
+  });
 
-    $("#product-search").keypress("keyup", function (e) {
-        if (e.keyCode === 13) {
-            e.preventDefault()
-            $(".search").click()
-        }
-    })
+  let controllerProducts = new ControllerProducts();
 
-    $(".search").click(function () {
-        $(".alert-results").hide()
-        controllerProducts.searchProducts()
-    })
+  $('#product-search').keypress('keyup', (e) => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      $('.search').click();
+    }
+  });
 
-    controllerProducts.searchProducts()
-})
+  $('.search').click(() => {
+    $('.alert-results').hide();
+    controllerProducts.searchProducts();
+  });
+
+  controllerProducts.searchProducts();
+});
 
 class ControllerProducts {
-    constructor() {
-        this.searchProducts = function (page, quantity) {
-            let self = this;
-            let name = $(".product-search").val()
-            let category = $(".category-select option:selected").attr("value")
-            let order = $(".order-select option:selected").attr("value")
+  constructor() {
+    this.searchProducts = (page, quantity) => {
+      let self = this;
+      let name = $('.product-search').val();
+      let category = $('.category-select option:selected').attr('value');
+      let order = $('.order-select option:selected').attr('value');
 
-            let pageRequested = (page) ? page : 1
+      let pageRequested = page ? page : 1;
+      let query_params = {
+        page: pageRequested,
+      };
 
-            let query_params = {
-                page: pageRequested
-            }
+      if (name) {
+        query_params.name = name;
+      }
+      if (category != 0) {
+        query_params.category = category;
+      }
+      if (order) {
+        query_params.order = order;
+      }
 
-            if (name) {
-                query_params.name = name
-            }
+      query_params.quantity = quantity ? quantity : 15;
 
-            if (category != 0) {
-                query_params.category = category
-            }
-            if (order) {
-                query_params.order = order
-            }
+      let query = $.param(query_params);
 
-            query_params.quantity = (quantity) ? quantity : 15
+      $.getJSON(server + '/product/product?' + query, (data) => {
+        self.loadList(data.products);
+        self.loadButtons(data.total);
+      });
+    };
 
-            let query = $.param(query_params)
+    this.loadList = (products) => {
+      $('.container-products').empty();
+      let quantity = products.length;
+      if (quantity == 0) {
+        $('.alert-results').show();
+      } else {
+        products.forEach((product) => {
+          let item = $('.example-product').clone();
+          item.find('.image').attr('src', product.url_image);
+          item.find('.product-title').html(product.name);
+          item.find('.product-price').html(`Precio: $${product.price}`);
+          let discount = item.find('.product-discount');
+          if (product.discount == 0) {
+            discount.hide();
+          } else {
+            discount.html(`Descuento: $${product.discount}`);
+          }
+          item.attr('id', product.id);
+          item.appendTo($('.container-products'));
+          item.removeClass('example-product');
+          item.show();
+        });
+      }
+    };
 
-            $.getJSON(server + "/products?" + query,
-                function (data) {
-                    self.loadList(data.products)
-                    self.loadButtons(data.total)
-                }
-            )
-        }
+    this.loadButtons = (total) => {
+      let quantityPerPage = 15;
+      let self = this;
+      let quantityOfPages = Math.ceil(total / quantityPerPage);
 
-        this.loadList = function (products) {
-            $(".container-products").empty();
-            let self = this;
-            let quantity = products.length;
-            if (quantity == 0) {
-                $(".alert-results").show()
-            } else {
-                for (i = 0; i < quantity; i++) {
-                    let product = $(".example-product").clone()
-                    product.find(".image").attr("src", products[i].url_image)
-                    product.find(".product-title").html(products[i].name)
-                    product.find(".product-price").html(`Precio: $${products[i].price}`)
-                    let discount = product.find(".product-discount")
-                    if (products[i].discount == 0) {
-                        (discount.hide())
-                    } else {
-                        discount.html(`Descuento: $${products[i].discount}`)
-                    }
-                    product.attr("id", products[i].id)
-                    product.appendTo($(".container-products"))
-                    product.removeClass("example-product")
-                    product.show()
-                }
-            }
-        }
+      $('.btn-group').empty();
+      for (let i = 0; i < quantityOfPages; i++) {
+        let button = $('.example-button').clone();
+        button.html(i + 1);
+        button.attr('page-number', i + 1);
+        button.appendTo($('.btn-group'));
+        button.removeClass('example-button');
+        button.show();
+      }
 
-        this.loadButtons = function (total) {
-            let quantityPerPage = 15
-            let self = this;
-            let quantityOfPages = Math.ceil(total / quantityPerPage)
-
-            $(".btn-group").empty()
-            for (i = 0; i < quantityOfPages; i++) {
-                let button = $(".example-button").clone()
-                button.html(i + 1)
-                button.attr("page-number", i + 1)
-                button.appendTo($(".btn-group"))
-                button.removeClass("example-button")
-                button.show()
-            }
-            $(".page-button").click(function () {
-                self.searchProducts($(this).attr("page-number"))
-                scroll(0, 0)
-            })
-        }
-    }
+      $('.page-button').click(function () {
+        self.searchProducts($(this).attr('page-number'));
+        scroll(0, 0);
+      });
+    };
+  }
 }
